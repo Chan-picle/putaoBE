@@ -22,6 +22,7 @@ router.get("/getuser",function(req,res,next){
   })
 });
 
+//发送短信验证码
 router.post('/sendcode', function(req, res, next) {
   let revalue={status:1};
   //使用别的接口发送短信
@@ -38,6 +39,7 @@ router.post('/sendcode', function(req, res, next) {
     throw err;
   })
 });
+
 //登陆 {phone:"123123123",code:"55555"}
 router.post('/login', function(req, res, next) {
   let revalue = {status:1,result:{userid:''}};
@@ -92,6 +94,24 @@ router.post('/login', function(req, res, next) {
     }
   }).catch(e=>{throw e});
 })
+
+//通过用户id 获取用户
+router.post("/getuserinfo",function(req,res,next){
+  let sql = `select * from user where user_id = ${req.body.id}`;
+  conn.query(sql, (err, results) => {
+    let obj = {
+      status:1
+    }
+    if (err) {
+      obj.msg = "失败"
+      throw err
+    }else{
+      obj.status=0;
+      obj.result = results[0];
+    }
+    res.json(obj);
+})
+});
 module.exports = router;
 
 
