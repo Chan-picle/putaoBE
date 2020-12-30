@@ -112,6 +112,24 @@ router.post("/getuserinfo",function(req,res,next){
     res.json(obj);
 })
 });
+router.post("/updateuser",function(req,res,next){
+  let sql = ` UPDATE user SET user_name='${req.body.username}' WHERE user_id =${req.body.id} ;`;
+  conn.query(sql, (err, results) => {
+    let obj = {
+      status:1
+    }
+    if (err) {
+      obj.msg = "失败"
+      throw err
+    }else{
+      //请求成功
+      obj.status = 0;
+      obj.msg = results.affectedRows?"修改成功":"用户不存在"
+      // obj.result = results;
+    }
+    res.json(obj);
+})
+});
 module.exports = router;
 
 
